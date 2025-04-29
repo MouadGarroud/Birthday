@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Happy Birthday Mouad Garroud 🎉</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, #1d2b64, #f8cdda);
+      font-family: 'Poppins', sans-serif;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 3em;
+      margin: 20px 0;
+      white-space: nowrap;
+      overflow: hidden;
+      border-right: .15em solid white;
+      animation: typing 4s steps(30, end), blink .75s step-end infinite;
+    }
+
+    @keyframes typing {
+      from { width: 0 }
+      to { width: 100% }
+    }
+
+    @keyframes blink {
+      from, to { border-color: transparent }
+      50% { border-color: white }
+    }
+
+    #start-btn {
+      padding: 15px 30px;
+      font-size: 1.5em;
+      border: none;
+      border-radius: 30px;
+      background-color: #ff6f91;
+      color: white;
+      cursor: pointer;
+      margin-top: 20px;
+      transition: background 0.3s;
+    }
+
+    #start-btn:hover {
+      background-color: #ff4e7a;
+    }
+
+    .balloon {
+      width: 50px;
+      height: 70px;
+      background: var(--color, pink);
+      border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+      position: absolute;
+      bottom: -100px;
+      animation: rise 10s linear infinite;
+    }
+
+    .balloon::after {
+      content: "";
+      position: absolute;
+      width: 2px;
+      height: 60px;
+      background: white;
+      top: 70px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    @keyframes rise {
+      0% { transform: translateY(0) translateX(0); }
+      100% { transform: translateY(-120vh) translateX(50px); }
+    }
+
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: -1;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Happy Birthday Mouad Garroud 🎉</h1>
+  <button id="start-btn">Start Celebration</button>
+
+  <audio id="music" src="https://www.bensound.com/bensound-music/bensound-buddy.mp3" loop></audio>
+
+  <canvas id="background"></canvas>
+
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+  <script>
+    const startBtn = document.getElementById('start-btn');
+    const music = document.getElementById('music');
+
+    startBtn.addEventListener('click', () => {
+      music.play();
+      fireConfetti();
+      startBalloons();
+      startParticles();
+      startBtn.style.display = 'none';
+    });
+
+    function fireConfetti() {
+      confetti({
+        particleCount: 200,
+        spread: 100,
+        origin: { y: 0.6 }
+      });
+    }
+
+    function startBalloons() {
+      setInterval(() => {
+        const balloon = document.createElement('div');
+        balloon.classList.add('balloon');
+        balloon.style.left = Math.random() * 100 + "vw";
+        balloon.style.setProperty('--color', getRandomColor());
+        document.body.appendChild(balloon);
+
+        setTimeout(() => {
+          balloon.remove();
+        }, 10000);
+      }, 800);
+    }
+
+    function getRandomColor() {
+      const colors = ['#ff4e50', '#fc913a', '#f9d423', '#ede574', '#00c9ff', '#92fe9d', '#d53369'];
+      return colors[Math.floor(Math.random() * colors.length)];
+    }
+
+    // Simple particle background
+    const canvas = document.getElementById('background');
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    function startParticles() {
+      for (let i = 0; i < 100; i++) {
+        particles.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          r: Math.random() * 3 + 1,
+          d: Math.random() + 1
+        });
+      }
+
+      animateParticles();
+    }
+
+    function animateParticles() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      for (let i = 0; i < particles.length; i++) {
+        const p = particles[i];
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2, true);
+        ctx.fillStyle = "rgba(255,255,255,0.8)";
+        ctx.fill();
+        p.y += p.d;
+        if (p.y > canvas.height) {
+          p.y = 0;
+          p.x = Math.random() * canvas.width;
+        }
+      }
+      requestAnimationFrame(animateParticles);
+    }
+  </script>
+
+</body>
+</html>
